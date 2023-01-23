@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -50,6 +51,12 @@ public class CategoriaController {
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaDTO.getCodigo()));
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaDTO);
+	}
+	
+	@PutMapping(value = "/{codigo}")
+	public ResponseEntity<CategoriaDTO> atualizar(@PathVariable Long codigo, @Valid @RequestBody CategoriaDTO categoriaDTO) {
+		categoriaDTO = categoriaService.atualizar(codigo, categoriaDTO);
+		return ResponseEntity.ok(categoriaDTO);
 	}
 	
 	@DeleteMapping(value = "/{codigo}")

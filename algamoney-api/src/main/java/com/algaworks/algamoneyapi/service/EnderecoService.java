@@ -23,10 +23,8 @@ public class EnderecoService {
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	
-	public EnderecoDTO buscarEnderecoPorId(Long id) {
-		Optional<Endereco> enderecoOptional = enderecoRepository.findById(id);
-		Endereco endereco = enderecoOptional.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		
+	public EnderecoDTO buscarEnderecoPorId(Long codigo) {
+		Endereco endereco = buscarEntidadeEndereco(codigo);
 		return new EnderecoDTO(endereco);
 	}
 	
@@ -37,11 +35,30 @@ public class EnderecoService {
 	
 	public EnderecoDTO salvar(EnderecoDTO enderecoDTO) {
 		Endereco endereco = new Endereco();
-		dtoToEntity(enderecoDTO, endereco);
-		
-		endereco = enderecoRepository.save(endereco);
+		endereco = persist(enderecoDTO, endereco);
 		
 		return new EnderecoDTO(endereco);
+	}
+	
+	public EnderecoDTO atualizar(Long codigo, EnderecoDTO enderecoDTO) {
+		Endereco endereco = buscarEntidadeEndereco(codigo);
+		endereco = persist(enderecoDTO, endereco);
+		
+		return new EnderecoDTO(endereco);
+	}
+
+	private Endereco persist(EnderecoDTO enderecoDTO, Endereco endereco) {
+		dtoToEntity(enderecoDTO, endereco);		
+		endereco = enderecoRepository.save(endereco);
+		
+		return endereco;
+	}
+	
+	private Endereco buscarEntidadeEndereco(Long codigo) {
+		Optional<Endereco> enderecoOptional = enderecoRepository.findById(codigo);
+		Endereco endereco = enderecoOptional.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		
+		return endereco;
 	}
 
 	private void dtoToEntity(EnderecoDTO enderecoDTO, Endereco endereco) {
@@ -52,6 +69,10 @@ public class EnderecoService {
 		
 		Cidade cidade = cidadeRepository.getReferenceById(enderecoDTO.getCidadeId()); 
 		endereco.setCidade(cidade);
+	}
+
+	public void excluir(Long codigo) {
+		enderecoRepository.deleteById(codigo);		
 	}
 	
 }

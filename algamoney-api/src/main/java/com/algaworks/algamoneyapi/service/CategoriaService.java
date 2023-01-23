@@ -19,9 +19,7 @@ public class CategoriaService {
 	private CategoriaRepository categoriaRepository;
 	
 	public CategoriaDTO buscarCategoriaPorId(Long id) {
-		Optional<Categoria> categoriaOptional = categoriaRepository.findById(id);
-		Categoria categoria = categoriaOptional.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		
+		Categoria categoria = buscarEntidadeCategoria(id);		
 		return new CategoriaDTO(categoria);
 	}
 	
@@ -32,9 +30,14 @@ public class CategoriaService {
 	
 	public CategoriaDTO salvar(CategoriaDTO categoriaDTO) {
 		Categoria categoria = new Categoria();
-		dtoToEntity(categoriaDTO, categoria);
+		categoria = persist(categoriaDTO, categoria);
 		
-		categoria = categoriaRepository.save(categoria);
+		return new CategoriaDTO(categoria);
+	}
+
+	public CategoriaDTO atualizar(Long codigo, CategoriaDTO categoriaDTO) {
+		Categoria categoria = buscarEntidadeCategoria(codigo);
+		categoria = persist(categoriaDTO, categoria);
 		
 		return new CategoriaDTO(categoria);
 	}
@@ -42,11 +45,23 @@ public class CategoriaService {
 	public void delete(Long id) {
 		categoriaRepository.deleteById(id);		
 	}
+
+	private Categoria persist(CategoriaDTO categoriaDTO, Categoria categoria) {
+		dtoToEntity(categoriaDTO, categoria);		
+		categoria = categoriaRepository.save(categoria);
+		
+		return categoria;
+	}
+	
+	private Categoria buscarEntidadeCategoria(Long id) {
+		Optional<Categoria> categoriaOptional = categoriaRepository.findById(id);
+		Categoria categoria = categoriaOptional.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		
+		return categoria;
+	}
 	
 	private void dtoToEntity(CategoriaDTO categoriaDTO, Categoria categoria) {
 		categoria.setNome(categoriaDTO.getNome());		
 	}
-
-	
 	
 }

@@ -3,6 +3,7 @@ package com.algaworks.algamoneyapi.model;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +23,7 @@ public class Pessoa {
 	
 	private Boolean ativo;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_codigo")
 	private Endereco endereco;
 

@@ -68,10 +68,6 @@ public class PessoaDTO {
 		this.enderecoId = enderecoId;
 	}
 		
-	public void inativar() {
-		this.ativo = false;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(codigo);
