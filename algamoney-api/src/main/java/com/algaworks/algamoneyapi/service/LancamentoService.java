@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.algaworks.algamoneyapi.dto.LancamentoDTO;
 import com.algaworks.algamoneyapi.model.Lancamento;
+import com.algaworks.algamoneyapi.model.Pessoa;
 import com.algaworks.algamoneyapi.model.enums.TipoLancamento;
 import com.algaworks.algamoneyapi.repository.LancamentoRepository;
+import com.algaworks.algamoneyapi.repository.PessoaRepository;
+import com.algaworks.algamoneyapi.service.exceptions.PessoaInexistenteOuInativaException;
 import com.algaworks.algamoneyapi.service.exceptions.ResourceNotFoundException;
 
 @Service
@@ -16,6 +19,9 @@ public class LancamentoService {
 
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
+	
+	@Autowired
+	private PessoaRepository pessoaRepository;
 	
 	public Page<LancamentoDTO> listarLancamentos(Pageable pageable) {
 		Page<Lancamento> lancamentos = lancamentoRepository.findAll(pageable);
@@ -28,7 +34,7 @@ public class LancamentoService {
 		return new LancamentoDTO(lancamento);
 	}
 	
-	public LancamentoDTO salvar(LancamentoDTO lancamentoDTO) {
+	public LancamentoDTO salvar(LancamentoDTO lancamentoDTO) throws PessoaInexistenteOuInativaException {
 		Lancamento lancamento = new Lancamento();
 		lancamento = persist(lancamentoDTO, lancamento);
 		
@@ -36,7 +42,8 @@ public class LancamentoService {
 	}
 	
 	private Lancamento persist(LancamentoDTO lancamentoDTO, 
-			Lancamento lancamento) {
+			Lancamento lancamento) {		
+		validaPessoa(lancamentoDTO);	
 		dtoToEntity(lancamentoDTO, lancamento);
 		return lancamentoRepository.save(lancamento);
 	}
@@ -51,7 +58,14 @@ public class LancamentoService {
 		
 		lancamento.setValor(lancamentoDTO.getValor());
 		lancamento.setTipo(TipoLancamento.valueOf(lancamentoDTO.getTipo()));
-		lancamento.setCategoria(lancamentoDTO.getCategoria());
+		lancamento.setCategoria(lancamentoDTO.getCategoria());	
 		lancamento.setPessoa(lancamentoDTO.getPessoa());
+	}
+
+	private void validaPessoa(LancamentoDTO lancamentoDTO) {
+		Pessoa pessoa = pessoaRepository.getReferenceById(lancamentoDTO.getPessoa().getCodigo());
+		if(pessoa == null || pessoa.isInativo()) {
+			throw new PessoaInexistenteOuInativaException();
+		}
 	}
 }
