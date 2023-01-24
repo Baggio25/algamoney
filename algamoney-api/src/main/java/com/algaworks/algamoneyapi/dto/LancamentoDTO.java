@@ -3,6 +3,10 @@ package com.algaworks.algamoneyapi.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.algaworks.algamoneyapi.model.Categoria;
 import com.algaworks.algamoneyapi.model.Lancamento;
 import com.algaworks.algamoneyapi.model.Pessoa;
@@ -10,13 +14,28 @@ import com.algaworks.algamoneyapi.model.Pessoa;
 public class LancamentoDTO {
 
 	private Long codigo;
+	
+	@NotBlank(message = "Descrição é obrigatória")
+	@Size(message= "Descrição deve conter entre 10 e 200 caracteres", min = 10, max = 200)
 	private String descricao;
+	
+	@NotNull(message = "Data de Vencimento é obrigatória")
 	private LocalDate dataVencimento;
+	
 	private LocalDate dataPagamento;
+	
+	@NotNull(message = "Valor é obrigatório")
 	private BigDecimal valor;
+	
 	private String observacao;
+	
+	@NotNull(message = "Tipo é obrigatório")
 	private String tipo;
+	
+	@NotNull(message = "Categoria é obrigatória")
 	private Categoria categoria;
+	
+	@NotNull(message = "Pessoa é obrigatória")
 	private Pessoa pessoa;
 
 	public LancamentoDTO() {
