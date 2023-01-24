@@ -9,7 +9,7 @@ CREATE TABLE lancamento (
 	categoria_codigo BIGINT(20) NOT NULL,
 	pessoa_codigo BIGINT(20) NOT NULL,
    
-   CONSTRAINT pk_lancamento PRIMARY KEY (codigo),
+    CONSTRAINT pk_lancamento PRIMARY KEY (codigo),
 	CONSTRAINT fk_lancamento_categoria FOREIGN KEY (categoria_codigo) REFERENCES categoria(codigo),
 	CONSTRAINT fk_lancamento_pessoa FOREIGN KEY (pessoa_codigo) REFERENCES pessoa(codigo)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

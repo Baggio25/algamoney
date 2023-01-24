@@ -3,7 +3,6 @@ package com.algaworks.algamoneyapi.model;
 import java.util.Objects;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +20,7 @@ public class Cidade {
 	
 	private String nome;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "estado_codigo")
 	private Estado estado;
 	

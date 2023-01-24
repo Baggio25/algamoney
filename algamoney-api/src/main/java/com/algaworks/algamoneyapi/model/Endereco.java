@@ -3,7 +3,6 @@ package com.algaworks.algamoneyapi.model;
 import java.util.Objects;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,7 +23,7 @@ public class Endereco {
 	private String bairro;
 	private String cep;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "cidade_codigo")
 	private Cidade cidade;
 	

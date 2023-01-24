@@ -1,61 +1,30 @@
-package com.algaworks.algamoneyapi.model;
+package com.algaworks.algamoneyapi.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import com.algaworks.algamoneyapi.model.Categoria;
+import com.algaworks.algamoneyapi.model.Lancamento;
+import com.algaworks.algamoneyapi.model.Pessoa;
 
-import com.algaworks.algamoneyapi.model.enums.TipoLancamento;
-import com.fasterxml.jackson.annotation.JsonFormat;
+public class LancamentoDTO {
 
-@Entity
-@Table(name = "lancamento")
-public class Lancamento {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 	private String descricao;
-	
-	@Column(name = "data_vencimento")
-	@JsonFormat(pattern =  "dd/MM/yyyy")
 	private LocalDate dataVencimento;
-	
-	@Column(name = "data_pagamento")
-	@JsonFormat(pattern =  "dd/MM/yyyy")
 	private LocalDate dataPagamento;
-	
 	private BigDecimal valor;
-	
 	private String observacao;
-	
-	@Enumerated(EnumType.STRING)
-	private TipoLancamento tipo;
-
-	@ManyToOne
-	@JoinColumn(name = "categoria_codigo")
+	private String tipo;
 	private Categoria categoria;
-	
-	@ManyToOne
-	@JoinColumn(name = "pessoa_codigo")
 	private Pessoa pessoa;
 
-	public Lancamento() {
+	public LancamentoDTO() {
+		// TODO Auto-generated constructor stub
 	}
-	
-	public Lancamento(Long codigo, String descricao, LocalDate dataVencimento, LocalDate dataPagamento,
-			BigDecimal valor, String observacao, TipoLancamento tipo, Categoria categoria, Pessoa pessoa) {
-		super();
+
+	public LancamentoDTO(Long codigo, String descricao, LocalDate dataVencimento, LocalDate dataPagamento,
+			BigDecimal valor, String observacao, String tipo, Categoria categoria, Pessoa pessoa) {
 		this.codigo = codigo;
 		this.descricao = descricao;
 		this.dataVencimento = dataVencimento;
@@ -65,6 +34,18 @@ public class Lancamento {
 		this.tipo = tipo;
 		this.categoria = categoria;
 		this.pessoa = pessoa;
+	}
+	
+	public LancamentoDTO(Lancamento lancamento) {
+		codigo = lancamento.getCodigo();
+		descricao = lancamento.getDescricao();
+		dataVencimento = lancamento.getDataVencimento();
+		dataPagamento = lancamento.getDataPagamento();
+		valor = lancamento.getValor();
+		observacao = lancamento.getObservacao();
+		tipo = lancamento.getTipo().toString();
+		categoria = lancamento.getCategoria();
+		pessoa = lancamento.getPessoa();
 	}
 
 	public Long getCodigo() {
@@ -115,11 +96,11 @@ public class Lancamento {
 		this.observacao = observacao;
 	}
 
-	public TipoLancamento getTipo() {
+	public String getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(TipoLancamento tipo) {
+	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
 
@@ -138,22 +119,5 @@ public class Lancamento {
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(codigo);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Lancamento other = (Lancamento) obj;
-		return Objects.equals(codigo, other.codigo);
-	}
-
+	
 }
