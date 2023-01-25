@@ -1,7 +1,9 @@
 package com.algaworks.algamoneyapi.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import com.algaworks.algamoneyapi.model.Pessoa;
 import com.algaworks.algamoneyapi.model.enums.TipoLancamento;
 import com.algaworks.algamoneyapi.repository.LancamentoRepository;
 import com.algaworks.algamoneyapi.repository.PessoaRepository;
+import com.algaworks.algamoneyapi.repository.filter.LancamentoFilter;
 import com.algaworks.algamoneyapi.service.exceptions.PessoaInexistenteOuInativaException;
 import com.algaworks.algamoneyapi.service.exceptions.ResourceNotFoundException;
 
@@ -23,9 +26,12 @@ public class LancamentoService {
 	@Autowired
 	private PessoaRepository pessoaRepository;
 	
-	public Page<LancamentoDTO> listarLancamentos(Pageable pageable) {
-		Page<Lancamento> lancamentos = lancamentoRepository.findAll(pageable);
-		return lancamentos.map(lancamento -> new LancamentoDTO(lancamento));
+	public List<LancamentoDTO> listarLancamentos(Pageable pageable, LancamentoFilter lancamentoFilter) {
+		List<Lancamento> lancamentos = lancamentoRepository.filtrar(pageable, lancamentoFilter)
+				.stream().collect(Collectors.toList());
+		
+		return lancamentos.stream().map(lancamento -> new LancamentoDTO(lancamento))
+				.collect(Collectors.toList());
 	}
 	
 	public LancamentoDTO buscarLancamentoPorCodigo(Long codigo) {

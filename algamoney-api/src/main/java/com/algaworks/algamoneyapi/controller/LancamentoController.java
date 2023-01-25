@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algamoneyapi.dto.LancamentoDTO;
 import com.algaworks.algamoneyapi.event.RecursoCriadoEvent;
 import com.algaworks.algamoneyapi.exceptions.dto.ErroDTO;
+import com.algaworks.algamoneyapi.repository.filter.LancamentoFilter;
 import com.algaworks.algamoneyapi.service.LancamentoService;
 import com.algaworks.algamoneyapi.service.exceptions.PessoaInexistenteOuInativaException;
 
@@ -43,8 +42,9 @@ public class LancamentoController {
 	private MessageSource messageSource;
 
 	@GetMapping
-	public ResponseEntity<Page<LancamentoDTO>> listarLancamentos(Pageable pageable) {
-		Page<LancamentoDTO> lista = lancamentoService.listarLancamentos(pageable);
+	public ResponseEntity<List<LancamentoDTO>> pesquisar(Pageable pageable, 
+			LancamentoFilter lancamentoFilter) {
+		List<LancamentoDTO> lista = lancamentoService.listarLancamentos(pageable, lancamentoFilter);
 		return ResponseEntity.ok(lista);
 	}
 
